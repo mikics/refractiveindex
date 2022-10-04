@@ -1,6 +1,6 @@
-import yaml
 import numpy
 import scipy.interpolate
+import yaml
 
 
 def get_array(func):
