@@ -3,8 +3,32 @@ import numpy
 import scipy.interpolate
 
 
+def get_array(func):
+    """
+    Python decorator for extending the calculations of refractive index and
+    extinction coefficients also to numpy array.
+    """
+    def extend_to_array(*args, **kwargs):
+
+        if numpy.ndim(args[1] != 0):
+
+            ri = numpy.zeros(len(args[1]))
+            i = 0
+
+            for wl in args[1]:
+                ri[i] = func(args[0], wl)
+                i += 1
+            return ri
+
+        else:
+            return func(args[0], args[1])
+
+    return extend_to_array
+
+
 class Material:
     """ Material class"""
+
     def __init__(self, filename, interpolation_points=100, empty=False):
         """
 
@@ -91,6 +115,7 @@ class Material:
             self.rangeMin = self.extinctionCoefficient.rangeMin
             self.rangeMax = self.extinctionCoefficient.rangeMax
 
+    @get_array
     def get_refractiveindex(self, wavelength):
         """
         Get the refractive index at a certain wavelenght
@@ -104,6 +129,7 @@ class Material:
         else:
             return self.refractiveIndex.get_refractiveindex(wavelength)
 
+    @get_array
     def get_extinctioncoefficient(self, wavelength):
         """
         Get the extinction coefficient
@@ -118,6 +144,25 @@ class Material:
         else:
             return self.extinctionCoefficient.\
                 get_extinction_coefficient(wavelength)
+
+    def get_permittivity(self, wavelength):
+        """
+        Get the permittivity from the refractive and
+        extinction coefficients.
+
+        :param wavelength:
+        """
+
+        if self.has_extinction() and self.has_refractive():
+
+            n = self.get_refractiveindex(wavelength)
+            k = self.get_extinctioncoefficient(wavelength)
+
+            eps = n**2 - k**2 + 1j*2*n*k
+            return n**2 - k**2
+
+        else:
+            return None
 
     def get_complete_extinction(self):
         '''
