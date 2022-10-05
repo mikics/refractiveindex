@@ -1,7 +1,8 @@
+from string import Template
+
 import numpy
 import scipy.interpolate
 import yaml
-from string import Template
 
 DB_PATH = Template("./refractiveindex.info-database/database/$filename.yml")
 
