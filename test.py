@@ -1,0 +1,10 @@
+from refractivesqlite import material
+import numpy as np
+
+au = material.Material(
+    filename="data/main/Au/Olmon-sc")
+
+wl0 = np.linspace(400e-9, 500e-9, 20)
+
+print(au.get_permittivity(wavelength=wl0))
+print(au.get_permittivity(400e-9))

@@ -1,6 +1,9 @@
 import numpy
 import scipy.interpolate
 import yaml
+from string import Template
+
+DB_PATH = Template("./refractiveindex.info-database/database/$filename.yml")
 
 
 def get_array(func):
@@ -8,22 +11,28 @@ def get_array(func):
     Python decorator for extending the calculations of refractive index and
     extinction coefficients also to numpy array.
     """
-    def extend_to_array(*args, **kwargs):
+    def extend_to_array(*args):
 
-        if numpy.ndim(args[1] != 0):
+        vfunc = numpy.vectorize(func)
 
-            ri = numpy.zeros(len(args[1]))
-            i = 0
-
-            for wl in args[1]:
-                ri[i] = func(args[0], wl)
-                i += 1
-            return ri
-
-        else:
-            return func(args[0], args[1])
+        output = vfunc(args[0], args[1])
+        return output
 
     return extend_to_array
+
+
+def use_nm(func):
+    """
+    Python decorator for converting wavelength from meters to nanometers.
+    """
+    def convert_to_nm(*args):
+
+        wl_nm = args[1] * 1e9
+
+        output = func(args[0], wl_nm)
+        return output
+
+    return convert_to_nm
 
 
 class Material:
@@ -42,7 +51,8 @@ class Material:
         if empty:
             return
 
-        f = open(filename)
+        data = DB_PATH.substitute(filename=filename)
+        f = open(data)
         try:
             material = yaml.safe_load(f)
         except yaml.YAMLError:
@@ -115,6 +125,7 @@ class Material:
             self.rangeMin = self.extinctionCoefficient.rangeMin
             self.rangeMax = self.extinctionCoefficient.rangeMax
 
+    @use_nm
     @get_array
     def get_refractiveindex(self, wavelength):
         """
@@ -129,6 +140,7 @@ class Material:
         else:
             return self.refractiveIndex.get_refractiveindex(wavelength)
 
+    @use_nm
     @get_array
     def get_extinctioncoefficient(self, wavelength):
         """
@@ -159,7 +171,7 @@ class Material:
             k = self.get_extinctioncoefficient(wavelength)
 
             eps = n**2 - k**2 + 1j*2*n*k
-            return n**2 - k**2
+            return eps
 
         else:
             return None
@@ -323,7 +335,7 @@ class FormulaRefractiveIndexData:
 
     def get_complete_refractive(self):
         '''
-        Get the complete refractive index for the whole wavelength intervall
+        Get the complete refractive index for the whole wavelength interval
 
         :returns: A list of refractive indices over the whole
                   wavelength intervall (len = interpolation_points)
