@@ -15,11 +15,9 @@ REQUIREMENTS = [
 ]
 
 
-setup(name='refractiveindex-sqlite',
-      version=VERSION,
-      author='Michele Castriotta',
-      description='A Python3 + SQLite wrapper for the refractiveindex database',
-      long_description='',
-      packages=[],
-      install_requires=REQUIREMENTS
-      )
+setup(
+    name='refractiveindex', version=VERSION,
+    author='Michele Castriotta',
+    description='A Python3 + SQLite wrapper for the refractiveindex database',
+    long_description='', packages=["refractiveindex"],
+    install_requires=REQUIREMENTS)
