@@ -19,5 +19,8 @@ setup(
     name='refractiveindex', version=VERSION,
     author='Michele Castriotta',
     description='A Python3 + SQLite wrapper for the refractiveindex database',
-    long_description='', packages=["refractiveindex"],
-    install_requires=REQUIREMENTS)
+    long_description='',
+    packages=["refractiveindex"],
+    install_requires=REQUIREMENTS,
+    include_package_data=True,
+    package_data={'refractiveindex': ['data.txt', 'refractiveindex.info-database/database/data/*/*/*.yml']},)

@@ -1,10 +1,13 @@
+import os
 from string import Template
 
 import numpy
 import scipy.interpolate
 import yaml
 
-DB_PATH = Template("./refractiveindex.info-database/database/$filename.yml")
+dirname = os.path.dirname(__file__)
+db_path = os.path.join(dirname, 'refractiveindex.info-database/database/')
+data_path = Template(f"{db_path}$filename.yml")
 
 
 def get_array(func):
@@ -52,7 +55,7 @@ class Material:
         if empty:
             return
 
-        data = DB_PATH.substitute(filename=filename)
+        data = data_path.substitute(filename=filename)
         f = open(data)
         try:
             material = yaml.safe_load(f)
