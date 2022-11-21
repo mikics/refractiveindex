@@ -20,7 +20,7 @@ setup(
     author='Michele Castriotta',
     description='A Python wrapper for the refractiveindex.info database',
     long_description='',
-    packages=find_namespace_packages(where="./"),
+    packages=["refractiveindex"],
     install_requires=REQUIREMENTS,
     include_package_data=True,
-    package_data={"refractiveindex.ridb.database.data.*.*": ["*.yml"]},)
+    package_data={"refractiveindex": ["ridb/database/data/*/*/*.yml"]},)
