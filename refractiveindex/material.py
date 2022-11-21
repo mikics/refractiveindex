@@ -6,7 +6,7 @@ import scipy.interpolate
 import yaml
 
 dirname = os.path.dirname(__file__)
-db_path = os.path.join(dirname, 'refractiveindex.info-database/database/')
+db_path = os.path.join(dirname, 'ridb/database/')
 data_path = Template(f"{db_path}$filename.yml")
 
 
