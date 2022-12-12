@@ -43,6 +43,7 @@ def test_constant_permittivity():
     eps = 1
     custom_mat = custom_material.CustomMaterial(permittivity=eps)
 
+    print(custom_mat.get_permittivity(1))
     print(custom_mat.get_permittivity(wl0))
     print(custom_mat.get_refractiveindex(wl0))
 
@@ -53,5 +54,26 @@ def test_constant_refractive():
     n = 1
     custom_mat = custom_material.CustomMaterial(refractiveIndex=n)
 
+    print(custom_mat.get_permittivity(1))
     print(custom_mat.get_permittivity(wl0))
     print(custom_mat.get_refractiveindex(wl0))
+
+
+def test_permeability():
+    wl0 = np.linspace(1, 4, 2)
+
+    mu_0 = np.array([[1.0 + 1j, 0.0, 0.0],
+                     [0.0, 1.0 + 1j, 0.0],
+                     [9.0, 0.0, 1.0 + 1j]], dtype=np.complex128)
+
+    mu_1 = np.array([[4.0 + 4j, 0.0, 0.0],
+                     [0.0, 4.0 + 4j, 0.0],
+                     [9.0, 0.0, 4.0 + 4j]], dtype=np.complex128)
+
+    mu = np.array([mu_0, mu_1])
+    custom_mat = custom_material.CustomMaterial(
+        wavelengths=wl0, permeability=mu)
+
+    print(custom_mat.get_permeability(3))
+    print(custom_mat.get_permittivity(3))
+    print(custom_mat.get_refractiveindex(2))
