@@ -17,10 +17,17 @@ def get_array(func):
     """
     def extend_to_array(*args):
 
-        vfunc = numpy.vectorize(func)
+        for i, wl in enumerate(args[1]):
+            output = func(args[0], wl)
+            if i == 0:
+                if isinstance(output, numpy.ndarray):
+                    output_array = numpy.zeros(
+                        (len(args[1]), *output.shape), dtype=output.dtype)
+                elif isinstance(output, (int, float, complex)):
+                    output_array = numpy.zeros(len(args[1]))
+            output_array[i] = output
 
-        output = vfunc(args[0], args[1])
-        return output
+        return output_array
 
     return extend_to_array
 

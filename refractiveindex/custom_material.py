@@ -6,9 +6,9 @@ from .material import get_array
 
 class CustomMaterial():
 
-    def __init__(self, wavelengths=None, permittivity=None, refractiveIndex=None, permeability=None):
+    def __init__(self, wavelengths=None, permittivity=None, refractive_index=None, permeability=None):
 
-        if permittivity is not None and refractiveIndex is not None:
+        if permittivity is not None and refractive_index is not None:
             raise Exception(
                 'To define a custom material, either the permittivity or the refractive index must be defined')
 
@@ -18,13 +18,13 @@ class CustomMaterial():
             else:
                 permeability = numpy.ones(len(wavelengths))
 
-        if permittivity is None and refractiveIndex is None:
+        if permittivity is None and refractive_index is None:
             if wavelengths is None:
                 permittivity = 1
-                refractiveIndex = 1
+                refractive_index = 1
             else:
                 permittivity = numpy.ones(len(wavelengths))
-                refractiveIndex = numpy.ones(len(wavelengths))
+                refractive_index = numpy.ones(len(wavelengths))
 
         if permittivity is not None:
             if wavelengths is None:
@@ -32,17 +32,17 @@ class CustomMaterial():
             self.permittivity = TabulatedData.\
                 FromLists(wavelengths, permittivity)
 
-            self.refractiveIndex = TabulatedData.\
+            self.refractive_index = TabulatedData.\
                 FromLists(wavelengths, numpy.sqrt(permittivity))
 
-        if refractiveIndex is not None:
+        if refractive_index is not None:
             if wavelengths is None:
                 wavelengths = 0
-            self.refractiveIndex = TabulatedData.\
-                FromLists(wavelengths, refractiveIndex)
+            self.refractive_index = TabulatedData.\
+                FromLists(wavelengths, refractive_index)
 
             self.permittivity = TabulatedData.\
-                FromLists(wavelengths, refractiveIndex**2)
+                FromLists(wavelengths, refractive_index ** 2)
 
         if permeability is not None:
             if wavelengths is None:
@@ -53,8 +53,8 @@ class CustomMaterial():
         self.rangeMin = numpy.min(wavelengths)
         self.rangeMax = numpy.max(wavelengths)
 
-        self.get_refractiveindex = self.refractiveIndex.get_data
-        self.get_complete_refractive = self.refractiveIndex.get_complete_data
+        self.get_refractiveindex = self.refractive_index.get_data
+        self.get_complete_refractive = self.refractive_index.get_complete_data
 
         self.get_permittivity = self.permittivity.get_data
         self.get_complete_permittivity = self.permittivity.get_complete_data
